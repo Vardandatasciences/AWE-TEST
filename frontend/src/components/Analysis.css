@@ -1,0 +1,201 @@
+.analysis-wrapper {
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.dashboard {
+  display: flex;
+  gap: 20px;
+}
+
+/* Left section */
+.left-section {
+  width: 250px;
+  flex-shrink: 0;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.box {
+  padding: 12px;
+  border-radius: 6px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+/* Status box colors */
+.total { background-color: #6c757d; }
+.completed { background-color: #28a745; }
+.completed-delay { background-color: #fd7e14; }
+.ongoing { background-color: #007bff; }
+.ongoing-delay { background-color: #dc3545; }
+.due { background-color: #17a2b8; }
+.due-delay { background-color: #ffcc00; }
+.pending { background-color: #6f42c1; } /* Purple for Pending */
+
+
+/* Right section */
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Filter buttons */
+.filter-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.period-filters, .activity-filters {
+  display: flex;
+  gap: 8px;
+}
+
+.button {
+  padding: 8px 16px;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  background: white;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.button.selected {
+  background: #007bff;
+  color: white;
+}
+
+/* Charts layout */
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+
+/* Chart boxes */
+.chart-box {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  height: 300px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}image.png
+
+.chart-box h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.chart-container {
+  height: calc(100% - 35px);
+  position: relative;
+}
+
+/* Bottom section (criticality chart and table) */
+.chart-and-table-container {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  height: 300px;
+}
+
+.chart-section, 
+.table-section {
+  height: 100%;
+}
+
+/* Table styles */
+.table-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f8f9fa;
+  padding: 10px;
+  text-align: left;
+  font-weight: normal;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 1px solid #dee2e6;
+}
+
+td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.no-data-message {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+  font-style: italic;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .left-section {
+    width: 100%;
+  }
+
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-and-table-container {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .chart-section,
+  .table-section {
+    height: 300px;
+  }
+}
+
+/* Add these styles to Analysis.css */
+.criticality-high {
+  color: red;
+}
+
+.criticality-medium {
+  color: orange; /* or yellow */
+}
+
+.criticality-low {
+  color: green;
+} 

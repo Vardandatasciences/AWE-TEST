@@ -1,0 +1,202 @@
+.audits-container {
+  padding: 0;
+  background-color: #f9fafb;
+  min-height: calc(100vh - 140px);
+}
+
+.audit-stats-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.audit-stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.regulatory-card {
+  border-top: 5px solid #e74c3c;
+}
+
+.internal-card {
+  border-top: 5px solid #3498db;
+}
+
+.customer-card {
+  border-top: 5px solid #9b59b6;
+}
+
+.audit-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.regulatory-icon {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+}
+
+.internal-icon {
+  background: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+}
+
+.customer-icon {
+  background: rgba(155, 89, 182, 0.1);
+  color: #9b59b6;
+}
+
+.audit-count {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.audit-type {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+}
+
+.audit-percentage {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.audit-search {
+  padding: 20px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.audit-search input {
+  flex: 1;
+  padding: 12px 20px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.audit-search input:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
+.add-audit-btn {
+  padding: 12px 24px;
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.add-audit-btn:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+}
+
+.audit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.audit-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.audit-card-header {
+  padding: 15px;
+  border-bottom: 1px solid #f1f2f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priority-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.priority-high {
+  background-color: #ff7675;
+  color: white;
+}
+
+.priority-low {
+  background-color: #00b894;
+  color: white;
+}
+
+.audit-card-body {
+  padding: 15px;
+}
+
+.audit-card-actions {
+  padding: 15px;
+  border-top: 1px solid #f1f2f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assign-btn {
+  background-color: #3498db;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s;
+}
+
+.assign-btn:hover {
+  background-color: #2980b9;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
