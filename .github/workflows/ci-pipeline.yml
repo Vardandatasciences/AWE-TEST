@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Backend CI Pipeline
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build:
+  backend:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,79 +24,33 @@ jobs:
         python-version: '3.11'
 
     # Step 3: Install backend dependencies
-    - name: Check if requirements.txt exists
-      run: |
-        if [ ! -f backend/requirements.txt ]; then
-          echo "requirements.txt not found!"
-          exit 1
-        else
-          echo "requirements.txt found, proceeding with installation."
-        fi
-
     - name: Install Backend Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r backend/requirements.txt  # Install dependencies from backend/requirements.txt
 
-    # Step 4: Install frontend dependencies (npm)
-    - name: Install Frontend Dependencies
-      run: |
-        cd frontend
-        npm install  # Install frontend dependencies from package.json
-
-    # Step 5: Lint with flake8 (Python)
+    # Step 4: Lint with flake8 (Python)
     - name: Lint with flake8
       run: |
         pip install flake8
         flake8 backend || true  # Lint Python code in the 'backend' directory, ignore failures to continue the pipeline
 
-    # Step 6: Run Unit Tests (Python)
+    # Step 5: Run Unit Tests (Python)
     - name: Run Python Unit Tests
       run: |
         pip install pytest  # Install pytest
         pytest backend  # Run unit tests for the backend code in the backend directory
 
-    # Step 7: Run React Unit Tests (Frontend)
-    - name: Run React Unit Tests
-      run: |
-        cd frontend
-        npm test  # Run tests for React components using Jest (or whichever testing tool you're using)
-
-    # Step 8: Install missing Python dependencies for Snyk scan
-    - name: Install Missing Dependencies
-      run: |
-        pip install flask flask-cors flask-sqlalchemy sqlalchemy python-dotenv werkzeug jinja2 itsdangerous click markupsafe pytz six google-api-python-client google-auth-httplib2 google-auth-oauthlib flask-jwt-extended dotenv pandas mysql mysql-connector-python bcrypt reportlab matplotlib numpy flask-bcrypt
-
-    # Step 9: Run Snyk Security Scan (Python)
-    - name: Run Snyk Dependency Scan (Python)
+    # Step 6: Run Snyk Dependency Scan (Python)
+    - name: Run Snyk Dependency Scan (Backend)
       uses: snyk/actions/python@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --file=backend/requirements.txt
+        args: --file=backend/requirements.txt  # Scan backend dependencies in requirements.txt
 
-    # Step 10: Run Snyk Security Scan (Frontend)
-    - name: Run Snyk Dependency Scan (Frontend)
-      run: |
-        cd frontend
-        snyk auth ${{ secrets.SNYK_TOKEN }}  # Authenticate for Snyk
-        snyk test  # Run Snyk security scan for the frontend dependencies
-
-    # Step 11: Build the frontend project
-    - name: Build Frontend Project
-      run: |
-        cd frontend
-        npm run build  # Build the React project (you can adjust this if using a different framework)
-
-    # Step 12: Build the backend project (if applicable)
-    - name: Build Backend Project
-      run: |
-        cd backend
-        # Run any build commands if required (like `python setup.py install`, etc.)
-        echo "Backend build steps here"
-
-    # Optional: Step 13 - Snyk Code Scan (for static code analysis)
+    # Step 7: Run Snyk Code Scan (Static Analysis)
     - name: Run Snyk Code Scan (Static Analysis)
       run: snyk code test
       env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}  # Snyk token for authentication
