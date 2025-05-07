@@ -25,3 +25,6 @@ numpy==1.24.3
 matplotlib
 reportlab
 flask_bcrypt
+flask
+flask-cors
+flask-sqlalchemy
