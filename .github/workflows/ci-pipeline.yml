@@ -1,3 +1,4 @@
+
 name: CI Pipeline
 
 on:
@@ -13,64 +14,49 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the code
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    # Step 3: Install backend dependencies
-    - name: Install Backend Dependencies
+    - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r backend/requirements.txt  # Install dependencies from backend/requirements.txt
+        pip install -r requirements.txt
 
-    # Step 4: Install frontend dependencies (npm)
-    - name: Install Frontend Dependencies
-      run: |
-        cd frontend
-        npm install  # Install frontend dependencies from package.json
-
-    # Step 5: Lint with flake8 (Python)
     - name: Lint with flake8
       run: |
         pip install flake8
-        flake8 backend || true  # Lint Python code in the 'backend' directory, ignore failures to continue the pipeline
+        flake8 src || true  # prevent breaking on lint issues
 
-    # Step 8: Run Snyk Security Scan (Python)
-    - name: Run Snyk Dependency Scan (Python)
+    - name: Run App
+      run: |
+        echo "Running app.py to show greeting..."
+        python src/app.py
+
+    - name: Run Unit Tests if present
+      run: |
+        if [ -d "tests" ]; then
+          pip install pytest
+          pytest tests  # Run all tests in the 'tests' directory
+        else
+          echo "No tests/ directory found. Skipping tests."
+        fi
+
+    - name: Snyk Dependency Scan
       uses: snyk/actions/python@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --file=backend/requirements.txt
+        args: --file=requirements.txt
 
-    # Step 9: Run Snyk Security Scan (Frontend)
-    - name: Run Snyk Dependency Scan (Frontend)
-      run: |
-        cd frontend
-        snyk auth ${{ secrets.SNYK_TOKEN }}  # Authenticate for Snyk
-        snyk test  # Run Snyk security scan for the frontend dependencies
+    - name: Install Snyk CLI for Code Scan
+      uses: snyk/actions/setup@master
 
-    # Step 10: Build the frontend project
-    - name: Build Frontend Project
-      run: |
-        cd frontend
-        npm run build  # Build the React project (you can adjust this if using a different framework)
-
-    # Step 11: Build the backend project (if applicable)
-    - name: Build Backend Project
-      run: |
-        cd backend
-        # Run any build commands if required (like `python setup.py install`, etc.)
-        echo "Backend build steps here"
-
-    # Optional: Step 12 - Snyk Code Scan (for static code analysis)
-    - name: Run Snyk Code Scan (Static Analysis)
+    - name: Run Snyk Code Scan
       run: snyk code test
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
