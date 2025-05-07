@@ -13,49 +13,63 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Checkout the code
     - name: Checkout Code
       uses: actions/checkout@v3
 
+    # Set up Python for Backend
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    - name: Install Dependencies
+    # Install Backend Dependencies
+    - name: Install Backend Dependencies
       run: |
+        cd backend
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r requirements.txt  # Install backend dependencies from requirements.txt
 
-    - name: Lint with flake8
+    # Lint Backend with flake8
+    - name: Lint Backend with flake8
       run: |
         pip install flake8
-        flake8 src || true  # prevent breaking on lint issues
+        flake8 backend/src || true  # Lint the backend code
 
-    - name: Run App
+    # Run Backend Unit Tests
+    - name: Run Backend Unit Tests
       run: |
-        echo "Running app.py to show greeting..."
-        python src/app.py
+        pip install pytest
+        pytest backend/src/tests  # Run backend unit tests
 
-    - name: Run Unit Tests if present
+    # Set up Node.js for Frontend
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    # Install Frontend Dependencies
+    - name: Install Frontend Dependencies
       run: |
-        if [ -d "tests" ]; then
-          pip install pytest
-          pytest tests  # Run all tests in the 'tests' directory
-        else
-          echo "No tests/ directory found. Skipping tests."
-        fi
+        cd frontend
+        npm install  # Install frontend dependencies from package.json
 
-    - name: Snyk Dependency Scan
+    # Lint Frontend with ESLint
+    - name: Lint Frontend with ESLint
+      run: |
+        npm install eslint
+        eslint frontend/src || true  # Lint the frontend code
+
+    # Run Frontend Unit Tests
+    - name: Run Frontend Unit Tests
+      run: |
+        npm install jest
+        npm test  # Run frontend unit tests using Jest
+
+    # Run Snyk Code Scan (Optional)
+    - name: Run Snyk Code Scan for Security
       uses: snyk/actions/python@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
-        args: --file=requirements.txt
-
-    - name: Install Snyk CLI for Code Scan
-      uses: snyk/actions/setup@master
-
-    - name: Run Snyk Code Scan
-      run: snyk code test
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        args: --file=backend/requirements.txt
