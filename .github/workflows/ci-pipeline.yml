@@ -13,63 +13,76 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the code
+    # Step 1: Checkout the code
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # Set up Python for Backend
+    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
-    # Install Backend Dependencies
+    # Step 3: Install backend dependencies
     - name: Install Backend Dependencies
       run: |
-        cd backend
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # Install backend dependencies from requirements.txt
+        pip install -r backend/requirements.txt  # Install dependencies from backend/requirements.txt
 
-    # Lint Backend with flake8
-    - name: Lint Backend with flake8
-      run: |
-        pip install flake8
-        flake8 backend/src || true  # Lint the backend code
-
-    # Run Backend Unit Tests
-    - name: Run Backend Unit Tests
-      run: |
-        pip install pytest
-        pytest backend/src/tests  # Run backend unit tests
-
-    # Set up Node.js for Frontend
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16'
-
-    # Install Frontend Dependencies
+    # Step 4: Install frontend dependencies (npm)
     - name: Install Frontend Dependencies
       run: |
         cd frontend
         npm install  # Install frontend dependencies from package.json
 
-    # Lint Frontend with ESLint
-    - name: Lint Frontend with ESLint
+    # Step 5: Lint with flake8 (Python)
+    - name: Lint with flake8
       run: |
-        npm install eslint
-        eslint frontend/src || true  # Lint the frontend code
+        pip install flake8
+        flake8 backend/src || true  # Lint Python code, ignore failures to continue the pipeline
 
-    # Run Frontend Unit Tests
-    - name: Run Frontend Unit Tests
+    # Step 6: Run Unit Tests (Python)
+    - name: Run Python Unit Tests
       run: |
-        npm install jest
-        npm test  # Run frontend unit tests using Jest
+        pip install pytest  # Install pytest
+        pytest backend/src  # Run unit tests for the backend code in src
 
-    # Run Snyk Code Scan (Optional)
-    - name: Run Snyk Code Scan for Security
+    # Step 7: Run React Unit Tests (Frontend)
+    - name: Run React Unit Tests
+      run: |
+        cd frontend
+        npm test  # Run tests for React components using Jest (or whichever testing tool you're using)
+
+    # Step 8: Run Snyk Security Scan (Python)
+    - name: Run Snyk Dependency Scan (Python)
       uses: snyk/actions/python@master
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         args: --file=backend/requirements.txt
+
+    # Step 9: Run Snyk Security Scan (Frontend)
+    - name: Run Snyk Dependency Scan (Frontend)
+      run: |
+        cd frontend
+        snyk auth ${{ secrets.SNYK_TOKEN }}  # Authenticate for Snyk
+        snyk test  # Run Snyk security scan for the frontend dependencies
+
+    # Step 10: Build the frontend project
+    - name: Build Frontend Project
+      run: |
+        cd frontend
+        npm run build  # Build the React project (you can adjust this if using a different framework)
+
+    # Step 11: Build the backend project (if applicable)
+    - name: Build Backend Project
+      run: |
+        cd backend
+        # Run any build commands if required (like `python setup.py install`, etc.)
+        echo "Backend build steps here"
+
+    # Optional: Step 12 - Snyk Code Scan (for static code analysis)
+    - name: Run Snyk Code Scan (Static Analysis)
+      run: snyk code test
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
